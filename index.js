@@ -155,12 +155,41 @@ app.get('/insertperson', (req, res)=>{
 
 //screen 2+3 - insert new alarm (& insert the send alarm by "alarm filter")
 app.get('/insertalarm', (req, res)=>{
+
+    //takes the date of the alarm and removes quotes or spaces
+    var s  = req.query.time;
+    s = s.replace(/\"/g, '');
+    s = s.replace(/\s/g, '');
+
+    //split the time to hours and minutes
+    var time = s.split(/\:|\-/g);
+    var dat = new Date();
+    dat.setHours(time[0]);
+    dat.setMinutes(time[1]);
+
+    //calculate the sleep time from now to the set alarm time
+    var d = new Date();
+    if(d.getHours() > dat.getHours()){
+        d.setHours(d.getHours() - dat.getHours());    
+    }else{
+        d.setHours(dat.getHours() - d.getHours());  
+    }
+    if(d.getMinutes() > dat.getMinutes()){
+        d.setMinutes(d.getMinutes() - dat.getMinutes());
+    }else{
+        d.setMinutes(dat.getMinutes() - d.getMinutes());
+    }
+    var diffHour = d.getHours() +':'+ d.getMinutes();
+
     //create new alarm object
     var newAlarm = {
         id: req.query.id,
         time: req.query.time,
         active: req.query.active,
         morningAwakning: req.query.morningAwakning,
+        creatorName: req.query.creatorName,
+        creatorAge: req.query.creatorAge,
+        sleepTime: diffHour,
         repeat: [req.query.repeat],
         filter:  {
             country: req.query.country,

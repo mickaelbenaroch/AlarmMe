@@ -5,7 +5,10 @@ var mongoose   = require('mongoose'),
         active: Boolean,
         morningAwakning: Boolean,
         filter: {country: String, gender: String, age: String},
-        repeat: [String]
+        repeat: [String],
+        creatorName:String,
+        creatorAge: Number,
+        sleepTime: String,
     },{collection: 'Alarms'});
 
 module.exports = mongoose.model('getalarms', schema);
